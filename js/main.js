@@ -4,9 +4,9 @@ function loadPartial(id, file) {
     .then(html => document.getElementById(id).innerHTML = html);
 }
 
-loadPartial('header', '../partials/header.html');
-loadPartial('sidebar', '../partials/sidebar.html');
-loadPartial('footer', '../partials/footer.html');
+loadPartial('header', 'https://fabriciodemedeiros.github.io/i-Fasil/partials/header.html');
+loadPartial('sidebar', 'https://fabriciodemedeiros.github.io/i-Fasil/partials/sidebar.html');
+loadPartial('footer', 'https://fabriciodemedeiros.github.io/i-Fasil/partials/footer.html');
 
 const sistemas = [
   { nome: "i-Escola", desc: "Gestão escolar integrada", url: "api/i-escola" },
