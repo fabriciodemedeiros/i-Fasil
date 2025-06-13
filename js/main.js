@@ -9,11 +9,11 @@ loadPartial('sidebar', 'https://fabriciodemedeiros.github.io/i-Fasil/partials/si
 loadPartial('footer', 'https://fabriciodemedeiros.github.io/i-Fasil/partials/footer.html');
 
 const sistemas = [
-  { nome: "i-Escola", desc: "Gestão escolar integrada", url: "api/i-escola" },
-  { nome: "i-Prefeitura", desc: "Módulo de serviços municipais", url: "api/i-prefeitura" },
-  { nome: "i-Professor", desc: "Perfil e ações dos professores", url: "api/i-professor" },
-  { nome: "i-Simulados", desc: "Gestão de provas e simulados", url: "api/i-simulados" },
-  { nome: "i-Saúde", desc: "Gestão de prontuários e atendimentos", url: "api/i-saude" }
+  { nome: "i-Escola", desc: "Gestão escolar integrada", url: "https://fabriciodemedeiros.github.io/i-Fasil/api/i-escola" },
+  { nome: "i-Prefeitura", desc: "Módulo de serviços municipais", url: "https://fabriciodemedeiros.github.io/i-Fasil/api/i-prefeitura" },
+  { nome: "i-Professor", desc: "Perfil e ações dos professores", url: "https://fabriciodemedeiros.github.io/i-Fasil/api/i-professor" },
+  { nome: "i-Simulados", desc: "Gestão de provas e simulados", url: "https://fabriciodemedeiros.github.io/i-Fasil/api/i-simulados" },
+  { nome: "i-Saúde", desc: "Gestão de prontuários e atendimentos", url: "https://fabriciodemedeiros.github.io/i-Fasil/api/i-saude" }
 ];
 
 const cardsContainer = document.getElementById('system-cards');
