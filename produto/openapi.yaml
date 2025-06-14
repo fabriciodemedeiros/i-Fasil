@@ -1,0 +1,123 @@
+openapi: 3.0.3
+info:
+  title: API de Produtos - Almoxarifado
+  description: |
+    Esta API permite gerenciar os produtos do almoxarifado, com operações de listagem, criação, atualização e exclusão.
+  version: 1.0.0
+  contact:
+    name: Equipe de Desenvolvimento
+    url: https://fasil.criarsite.online
+    email: suporte@fasil.criarsite.online
+servers:
+  - url: https://fasil.criarsite.online/api
+    description: Ambiente de Produção
+paths:
+  /produtos:
+    get:
+      summary: Listar todos os produtos
+      responses:
+        '200':
+          description: Lista de produtos retornada com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Produto'
+    post:
+      summary: Criar um novo produto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovoProduto'
+      responses:
+        '201':
+          description: Produto criado com sucesso
+        '400':
+          description: Dados inválidos
+  /produtos/{id}:
+    get:
+      summary: Obter detalhes de um produto específico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Produto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        '404':
+          description: Produto não encontrado
+    put:
+      summary: Atualizar um produto existente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NovoProduto'
+      responses:
+        '200':
+          description: Produto atualizado com sucesso
+        '400':
+          description: Dados inválidos
+        '404':
+          description: Produto não encontrado
+    delete:
+      summary: Excluir um produto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Produto excluído com sucesso
+        '404':
+          description: Produto não encontrado
+components:
+  schemas:
+    Produto:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        nome:
+          type: string
+          example: Caneta azul
+        descricao:
+          type: string
+          example: Caneta esferográfica azul, corpo transparente
+        quantidade:
+          type: integer
+          example: 50
+    NovoProduto:
+      type: object
+      required:
+        - nome
+        - quantidade
+      properties:
+        nome:
+          type: string
+          example: Papel A4
+        descricao:
+          type: string
+          example: Resma de papel 500 folhas
+        quantidade:
+          type: integer
+          example: 100
