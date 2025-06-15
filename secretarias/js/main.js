@@ -5,9 +5,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       produtos.forEach((p) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${p.nome}</td>
+          <td>${p.secretaria}</td>
           <td>${p.descricao || "-"}</td>
-          <td>${p.quantidade}</td>
+          <td>${p.id_prefeitura}</td>
           <td>
             <a href="edit?id=${p.id}" class="btn btn-sm btn-warning">Editar</a>
             <button class="btn btn-sm btn-danger" onclick="handleDelete(${p.id})">Excluir</button>
@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   
       // Inicializa DataTables após renderizar os dados
       $("#tabela-produtos").DataTable({
+        ordering: false, // 👈 desativa a ordenação no front-end
         language: {
     url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
   },
@@ -28,9 +29,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     {
       extend: 'copy',
       text: 'Copiar',
-      title: "Tabela de Produtos do Almoxarifado", // Evita que o <title> da página seja incluído
+      title: "Lista de Secretarias", // Evita que o <title> da página seja incluído
       exportOptions: {
-        columns: [0, 1, 2] // índices das colunas que devem ser exportadas
+        columns: [0, 1] // índices das colunas que devem ser exportadas
       }
     },
     {
