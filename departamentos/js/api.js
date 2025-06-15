@@ -1,7 +1,7 @@
 const API_URL = "https://www.fasil.criarsite.online/api"; // Troque pelo seu endpoint
 
 async function fetchDepartamentos() {
-  const res = await fetch(`${API_URL}/secretarias/read.php`);
+  const res = await fetch(`${API_URL}/departamentos/read.php`);
   return res.json();
 }
 
