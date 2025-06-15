@@ -13,7 +13,8 @@ const sistemas = [
   { nome: "i-Prefeitura", desc: "Módulo de serviços municipais", url: "https://fabriciodemedeiros.github.io/i-Fasil/api/i-prefeitura" },
   { nome: "i-Professor", desc: "Perfil e ações dos professores", url: "https://fabriciodemedeiros.github.io/i-Fasil/api/i-professor" },
   { nome: "i-Simulados", desc: "Gestão de provas e simulados", url: "https://fabriciodemedeiros.github.io/i-Fasil/api/i-simulados" },
-  { nome: "i-Saúde", desc: "Gestão de prontuários e atendimentos", url: "https://fabriciodemedeiros.github.io/i-Fasil/api/i-saude" }
+  { nome: "i-Saúde", desc: "Gestão de prontuários e atendimentos", url: "https://fabriciodemedeiros.github.io/i-Fasil/api/i-saude" },
+  { nome: "Outros Sistemas", desc: "Sistemas em testes.", url: "https://fabriciodemedeiros.github.io/i-Fasil/api/sistemas" }
 ];
 
 const cardsContainer = document.getElementById('system-cards');
