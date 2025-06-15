@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detalhes da Secretaria</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body {
+      background-color: #f4f6f9;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .navbar {
+      background-color: #003366;
+    }
+
+    .navbar-brand, .nav-link {
+      color: #fff !important;
+    }
+
+    .card {
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .label {
+      font-weight: 600;
+      color: #555;
+    }
+
+    .value {
+      font-weight: 400;
+      color: #222;
+    }
+
+    .section-title {
+      border-bottom: 2px solid #003366;
+      padding-bottom: 0.3rem;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      color: #003366;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg mb-4">
+    <div class="container">
+      <a class="navbar-brand" href="#">Sistema Institucional</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2 class="section-title">Detalhes da Secretaria</h2>
+
+    <div class="card p-3 mb-5">
+      <div class="row mb-3">
+        <div class="col-6">
+          <p class="label mb-0">Secretaria:</p>
+          <p class="value" id="sec-nome"></p>
+        </div>
+        <div class="col-6">
+          <p class="label mb-0">Sigla:</p>
+          <p class="value" id="sec-sigla"></p>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <p class="label mb-1">Descrição:</p>
+          <p class="value" id="sec-descricao"></p>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <p class="label mb-0">E-mail:</p>
+          <p class="value" id="sec-email"></p>
+        </div>
+        <div class="col-md-6">
+          <p class="label mb-0">Telefone:</p>
+          <p class="value" id="sec-telefone"></p>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-8">
+          <p class="label">Endereço:</p>
+          <p class="value" id="sec-endereco"></p>
+        </div>
+        <div class="col-md-4">
+          <p class="label">Número:</p>
+          <p class="value" id="sec-numero"></p>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <p class="label">Bairro:</p>
+          <p class="value" id="sec-bairro"></p>
+        </div>
+        <div class="col-md-4">
+          <p class="label">Cidade:</p>
+          <p class="value" id="sec-cidade"></p>
+        </div>
+        <div class="col-md-2">
+          <p class="label">UF:</p>
+          <p class="value" id="sec-uf"></p>
+        </div>
+        <div class="col-md-2">
+          <p class="label">CEP:</p>
+          <p class="value" id="sec-cep"></p>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <p class="label">Criado em:</p>
+          <p class="value" id="sec-criado"></p>
+        </div>
+        <div class="col-md-6">
+          <p class="label">Atualizado em:</p>
+          <p class="value" id="sec-atualizado"></p>
+        </div>
+      </div>
+
+      <a href="index.html" class="btn btn-secondary mt-3">Voltar</a>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = "https://fasil.criarsite.online/api/secretarias";
+
+    function getIdFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("id");
+    }
+
+    async function fetchSecretariaById(id) {
+      const response = await fetch(`${API_URL}/read_one.php?id=${id}`);
+      const data = await response.json();
+      if (!response.ok) {
+        alert("Erro ao carregar secretaria.");
+        return null;
+      }
+      return data;
+    }
+
+    async function carregarDetalhesSecretaria() {
+      const id = getIdFromURL();
+      if (!id) {
+        alert("ID da secretaria não informado.");
+        return;
+      }
+
+      const sec = await fetchSecretariaById(id);
+      if (!sec) return;
+
+      document.getElementById("sec-nome").textContent = sec.secretaria || "";
+      document.getElementById("sec-sigla").textContent = sec.sigla || "";
+      document.getElementById("sec-descricao").textContent = sec.descricao || "";
+      document.getElementById("sec-email").textContent = sec.email || "";
+      document.getElementById("sec-telefone").textContent = sec.telefone || "";
+      document.getElementById("sec-endereco").textContent = sec.endereco || "";
+      document.getElementById("sec-numero").textContent = sec.numero || "";
+      document.getElementById("sec-bairro").textContent = sec.bairro || "";
+      document.getElementById("sec-cidade").textContent = sec.cidade || "";
+      document.getElementById("sec-uf").textContent = sec.uf || "";
+      document.getElementById("sec-cep").textContent = sec.cep || "";
+      document.getElementById("sec-criado").textContent = sec.created_at || "";
+      document.getElementById("sec-atualizado").textContent = sec.updated_at || "";
+    }
+
+    carregarDetalhesSecretaria();
+  </script>
+</body>
+</html>
