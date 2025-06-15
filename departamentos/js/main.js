@@ -1,14 +1,14 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const tabela = document.querySelector("#tabela-produtos tbody");
+    const tabela = document.querySelector("#tabela-departamentos tbody");
     if (tabela) {
-      const produtos = await fetchSecretarias();
+      const produtos = await fetchDepartamentos();
       produtos.forEach((p) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${p.departamento}</td>
           <td>${p.sigla || "-"}</td>
-          <td>${p.id_secretaria || "-"}</td>
           <td>${p.descricao || "-"}</td>
+          <td>${p.id_secretaria || "-"}</td>
           <td>${p.id_prefeitura}</td>
           <td>
             <a href="edit?id=${p.id}" class="btn btn-sm btn-warning">Editar</a>
@@ -18,9 +18,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         tabela.appendChild(tr);
       });
   
-      // Inicializa DataTables após renderizar os dados
-      $("#tabela-produtos").DataTable({
-        ordering: false, // 👈 desativa a ordenação no front-end
+      $("#tabela-departamentos").DataTable({
+        ordering: false,
         language: {
     url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
   },
@@ -31,23 +30,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     {
       extend: 'copy',
       text: 'Copiar',
-      title: "Lista de Secretarias", // Evita que o <title> da página seja incluído
+      title: "Lista de Departamentos",
       exportOptions: {
-        columns: [0, 1] // índices das colunas que devem ser exportadas
+        columns: [0, 1]
       }
     },
     {
       extend: 'excel',
       text: 'Excel',
       exportOptions: {
-        columns: [0, 1, 2] // índices das colunas que devem ser exportadas
+        columns: [0, 1, 2]
       }
     },
     {
       extend: 'pdf',
       text: 'PDF',
       exportOptions: {
-        columns: [0, 1, 2] // índices das colunas que devem ser exportadas
+        columns: [0, 1, 2]
       }
     },
     {
@@ -55,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       text: 'Imprimir',
       exportOptions: {
         columns: ':not(.no-export)',
-        columns: [0, 1, 2] // índices das colunas que devem ser exportadas
+        columns: [0, 1, 2]
       }
     }
   ]
@@ -63,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
   async function handleDelete(id) {
-    if (!confirm("Tem certeza que deseja excluir este produto?")) return;
+    if (!confirm("Tem certeza que deseja excluir este Departamento?")) return;
   
     try {
       const response = await fetch(`${API_URL}/delete.php`, {
@@ -79,9 +78,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
   
-      alert("Produto excluído com sucesso!");
+      alert("Departamento excluído com sucesso!");
   
-      // Remover a linha da tabela dinamicamente
       const btn = document.querySelector(`button[onclick="handleDelete(${id})"]`);
       if (btn) {
         const row = btn.closest('tr');
