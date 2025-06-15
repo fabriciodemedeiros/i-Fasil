@@ -7,120 +7,114 @@
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 	<script src="https://fasil.criarsite.online/dist/js/cep.js"></script>
 </head>
-<body>
+<body class="bg-dark">
 
 	<div class="container mt-5">
+		<div class="card shadow rounded-4">
+		  <div class="card-header bg-primary text-white rounded-top-4">
+			<h4 class="mb-0">Cadastro de Departamento</h4>
+		  </div>
+		  <form action="inserir_departamento.php" method="POST" class="p-4">
+			<div class="row g-3">
 	
-	<h2>Cadastro de Secretaria</h2>
-
-	<form id="form-create">
-
-		<div class="row">
-		<div class="col-9 mb-3">
-			<label for="secretaria" class="form-label mb-0">Secretaria:</label>
-			<input type="text" id="secretaria" class="form-control" required />
-		</div>
-
-		<div class="col-3 mb-3">
-			<label for="sigla" class="form-label mb-0">Sigla:</label>
-			<input type="text" id="sigla" class="form-control" required />
-		</div>
-		</div>
-
-		<div class="row">
-		<div class="mb-3">
-			<label for="descricao" class="form-label mb-0">Descrição:</label>
-			<textarea id="descricao" class="form-control"></textarea>
-		</div>
-		</div>
-
-		<div class="row">
-		<div class="col-6 mb-3">
-			<label for="email" class="form-label mb-0">E-mail:</label>
-			<input type="email" id="email" class="form-control">
-		</div>
-
-		<div class="col-6 mb-3">
-			<label for="telefone" class="form-label mb-0">Telefone:</label>
-			<input type="telefone" id="telefone" class="form-control">
-		</div>
-		</div>
-
-		<!-- Grupo: Endereço -->
-		<fieldset class="border p-2 mb-3">
-			<legend class="w-auto px-0">Endereço</legend>
+			  <div class="col-md-6">
+				<label for="id_secretaria" class="form-label">Secretaria</label>
+				<input type="number" class="form-control" id="id_secretaria" name="id_secretaria" required>
+			  </div>
 	
-			<div class="row">
-				<div class="col-md-3 mb-3">
-					<label for="txtCep" class="form-label">CEP:</label>
-					<input type="text" name="txtCep" id="cep" class="form-control">
-				</div>
+			  <div class="col-md-6">
+				<label for="id_prefeitura" class="form-label">Prefeitura</label>
+				<input type="number" class="form-control" id="id_prefeitura" name="id_prefeitura" required>
+			  </div>
 	
-				<div class="col-md-6 mb-3">
-					<label for="txtEndereco" class="form-label">Endereço:</label>
-					<input type="text" name="txtEndereco" id="endereco" class="form-control">
-				</div>
+			  <div class="col-md-6">
+				<label for="departamento" class="form-label">Nome do Departamento</label>
+				<input type="text" class="form-control" id="departamento" name="departamento" maxlength="100" required>
+			  </div>
 	
-				<div class="col-md-3 mb-3">
-					<label for="txtNumero" class="form-label">Número:</label>
-					<input type="text" name="txtNumero" id="numero" class="form-control">
-				</div>
-			</div>
+			  <div class="col-md-6">
+				<label for="sigla" class="form-label">Sigla</label>
+				<input type="text" class="form-control" id="sigla" name="sigla" maxlength="10" required>
+			  </div>
 	
-			<div class="row">
-				<div class="col-md-3 mb-3">
-					<label for="txtBairro" class="form-label">Bairro:</label>
-					<input type="text" name="txtBairro" id="bairro" class="form-control">
-				</div>
+			  <div class="col-md-12">
+				<label for="descricao" class="form-label">Descrição</label>
+				<textarea class="form-control" id="descricao" name="descricao" rows="2" maxlength="255" required></textarea>
+			  </div>
 	
-				<div class="col-md-6 mb-3">
-					<label for="txtCidade" class="form-label">Cidade:</label>
-					<input type="text" name="txtCidade" id="cidade" class="form-control">
-				</div>
+			  <div class="col-md-6">
+				<label for="email" class="form-label">E-mail</label>
+				<input type="email" class="form-control" id="email" name="email" maxlength="50" required>
+			  </div>
 	
-				<div class="col-md-3 mb-3">
-					<label for="txtUf" class="form-label">UF:</label>
-					<select name="txtUf" id="uf" class="form-select">
-						<option value=""  selected>UF...</option>
-						<option value="AC" >Acre</option>
-						<option value="AL" >Alagoas</option>
-						<option value="AP" >Amap&aacute;</option>
-						<option value="AM" >Amazonas</option>
-						<option value="BA" >Bahia</option>
-						<option value="CE" >Cear&aacute;</option>
-						<option value="DF" >Distrito Federal</option>
-						<option value="ES" >Esp&iacute;rito Santo</option>
-						<option value="GO" >Goi&aacute;s</option>
-						<option value="MA" >Maranh&atilde;o</option>
-						<option value="MT" >Mato Grosso</option>
-						<option value="MS" >Mato Grosso do Sul</option>
-						<option value="MG" >Minas Gerais</option>
-						<option value="PA" >Par&aacute;</option>
-						<option value="PB" >Para&iacute;ba</option>
-						<option value="PR" >Paran&aacute;</option>
-						<option value="PE" >Pernambuco</option>
-						<option value="PI" >Piau&iacute;</option>
-						<option value="RJ" >Rio de Janeiro</option>
-						<option value="RN" >Rio Grande do Norte</option>
-						<option value="RS" >Rio Grande do Sul</option>
-						<option value="RO" >Rond&ocirc;nia</option>
-						<option value="RR" >Roraima</option>
-						<option value="SC" >Santa Catarina</option>
-						<option value="SP" >S&atilde;o Paulo</option>
-						<option value="SE" >Sergipe</option>
-						<option value="TO" >Tocantins</option>
-					</select>
-				</div>
+			  <div class="col-md-6">
+				<label for="telefone" class="form-label">Telefone</label>
+				<input type="text" class="form-control" id="telefone" name="telefone" maxlength="20">
+			  </div>
+	
+			  <div class="col-md-6">
+				<label for="endereco" class="form-label">Endereço</label>
+				<input type="text" class="form-control" id="endereco" name="endereco" maxlength="50">
+			  </div>
+	
+			  <div class="col-md-2">
+				<label for="numero" class="form-label">Número</label>
+				<input type="text" class="form-control" id="numero" name="numero" maxlength="10">
+			  </div>
+	
+			  <div class="col-md-4">
+				<label for="bairro" class="form-label">Bairro</label>
+				<input type="text" class="form-control" id="bairro" name="bairro" maxlength="50">
+			  </div>
+	
+			  <div class="col-md-6">
+				<label for="cidade" class="form-label">Cidade</label>
+				<input type="text" class="form-control" id="cidade" name="cidade" maxlength="50">
+			  </div>
+	
+			  <div class="col-md-3">
+				<label for="uf" class="form-label">UF</label>
+				<select class="form-select" id="uf" name="uf">
+				  <option selected disabled>Escolha...</option>
+				  <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+				  <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+				  <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+				  <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+				  <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+				  <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+				  <option>SP</option><option>SE</option><option>TO</option>
+				</select>
+			  </div>
+	
+			  <div class="col-md-3">
+				<label for="cep" class="form-label">CEP</label>
+				<input type="text" class="form-control" id="cep" name="cep" maxlength="8">
+			  </div>
+			  
+			  <div class="col-md-6">
+				<label for="ip_at" class="form-label">IP de Registro</label>
+				<script>
+					fetch('https://api.ipify.org?format=json')
+					  .then(response => response.json())
+					  .then(data => {
+						// Define o valor do input com o IP
+						document.getElementById('ip_at').value = data.ip;
+					  })
+					  .catch(error => {
+						console.error('Erro ao obter IP:', error);
+					  });
+				  </script>
+			  </div>
 	
 			</div>
-		</fieldset>
-
-		<input type="hidden" id="id_prefeitura" value="1" />
-		<button  type="submit" class="btn btn-success">Salvar</button>
-		<a href="secretarias.html" class="btn btn-secondary">Cancelar</a>
-	</form>
-
-	</div>
+	
+			<div class="mt-4 text-end">
+			  <button type="submit" class="btn btn-success px-4">Cadastrar</button>
+			  <button type="reset" class="btn btn-secondary px-4">Limpar</button>
+			</div>
+		  </form>
+		</div>
+	  </div>
 
 <script src="js/api.js"></script>
 
