@@ -5,7 +5,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       produtos.forEach((p) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${p.secretaria}</td>
+          <td>${p.departamento}</td>
+          <td>${p.sigla || "-"}</td>
+          <td>${p.id_secretaria || "-"}</td>
           <td>${p.descricao || "-"}</td>
           <td>${p.id_prefeitura}</td>
           <td>
