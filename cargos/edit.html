@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Editar Departamento</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+	<div class="container mt-3">
+	
+	<div class="card shadow rounded-4">
+		<div class="card-header bg-warning text-dark rounded-top-4">
+			<h4 class="mb-0">Editar Departamento</h4>
+		</div>
+
+	<!-- Esse formulário pressupõe que os dados do cargo foram carregados em variáveis como $cargo -->
+<form action="/api/cargos/update.php?id=<?= $cargo['id_cargo'] ?>" method="POST" class="container mt-5">
+	<h2 class="mb-4">Editar Cargo</h2>
+	<div class="mb-3">
+	  <label class="form-label">Cargo</label>
+	  <input type="text" class="form-control" name="cargo" value="<?= htmlspecialchars($cargo['cargo']) ?>" required>
+	</div>
+	<div class="mb-3">
+	  <label class="form-label">Descrição</label>
+	  <textarea class="form-control" name="descricao" rows="3"><?= htmlspecialchars($cargo['descricao']) ?></textarea>
+	</div>
+	<div class="mb-3">
+	  <label class="form-label">Nível</label>
+	  <select class="form-select" name="nivel" required>
+		<?php
+		  $niveis = ['Efetivo', 'Comissionado', 'Temporário', 'Estagiário'];
+		  foreach ($niveis as $nivel) {
+			$selected = $nivel === $cargo['nivel'] ? 'selected' : '';
+			echo "<option value='$nivel' $selected>$nivel</option>";
+		  }
+		?>
+	  </select>
+	</div>
+	<div class="mb-3">
+	  <label class="form-label">Remuneração Base (R$)</label>
+	  <input type="number" step="0.01" class="form-control" name="remuneracao_base" value="<?= $cargo['remuneracao_base'] ?>" required>
+	</div>
+	<button type="submit" class="btn btn-success">Salvar Alterações</button>
+  </form>
+  
+
+		<div class="mt-4 text-end">
+		<button type="submit" class="btn btn-warning px-4">Atualizar</button>
+		<a href="departamentos.html" class="btn btn-secondary px-4">Cancelar</a>
+		</div>
+	</form>
+	</div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    fetchDepartamentos().then(departamentos => {
+      const departamento = departamentos.find(d => d.id == id);
+      if (departamento) {
+        document.getElementById("id").value = departamento.id;
+        document.getElementById("id_secretaria").value = departamento.id_secretaria;
+        document.getElementById("id_prefeitura").value = departamento.id_prefeitura;
+        document.getElementById("departamento").value = departamento.departamento;
+        document.getElementById("sigla").value = departamento.sigla;
+        document.getElementById("descricao").value = departamento.descricao;
+        document.getElementById("email").value = departamento.email;
+        document.getElementById("telefone").value = departamento.telefone;
+        document.getElementById("endereco").value = departamento.endereco;
+        document.getElementById("numero").value = departamento.numero;
+        document.getElementById("bairro").value = departamento.bairro;
+        document.getElementById("cidade").value = departamento.cidade;
+        document.getElementById("uf").value = departamento.uf;
+        document.getElementById("cep").value = departamento.cep;
+		document.getElementById("ip_at").textContent = departamento.ip_at;
+      } else {
+        alert("Departamento não encontrado.");
+      }
+    });
+
+    document.getElementById("form-edit").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = {
+        id: parseInt(document.getElementById("id").value),
+        id_secretaria: parseInt(document.getElementById("id_secretaria").value),
+        id_prefeitura: parseInt(document.getElementById("id_prefeitura").value),
+        departamento: document.getElementById("departamento").value.trim(),
+        sigla: document.getElementById("sigla").value.trim(),
+        descricao: document.getElementById("descricao").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        telefone: document.getElementById("telefone").value.trim(),
+        endereco: document.getElementById("endereco").value.trim(),
+        numero: document.getElementById("numero").value.trim(),
+        bairro: document.getElementById("bairro").value.trim(),
+        cidade: document.getElementById("cidade").value.trim(),
+        uf: document.getElementById("uf").value,
+        cep: document.getElementById("cep").value.trim(),
+      };
+
+      const sucesso = await atualizarDepartamento(data);
+      if (sucesso) {
+        alert("Departamento atualizado com sucesso!");
+        window.location.href = "departamentos.html";
+      } else {
+        alert("Erro ao atualizar o departamento.");
+      }
+    });
+  </script>
+</body>
+</html>
