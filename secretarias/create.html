@@ -4,6 +4,8 @@
 	<meta charset="UTF-8" />
 	<title>+Nova Secretaria</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<script src="https://fasil.criarsite.online/dist/js/cep.js"></script>
 </head>
 <body>
 
@@ -15,23 +17,104 @@
 
 		<div class="row">
 		<div class="col-9 mb-3">
-			<label for="secretaria" class="form-label">Secretaria:</label>
+			<label for="secretaria" class="form-label mb-0">Secretaria:</label>
 			<input type="text" id="secretaria" class="form-control" required />
 		</div>
 
 		<div class="col-3 mb-3">
-			<label for="sigla" class="form-label">Sigla:</label>
+			<label for="sigla" class="form-label mb-0">Sigla:</label>
 			<input type="text" id="sigla" class="form-control" required />
 		</div>
 		</div>
 
 		<div class="row">
 		<div class="mb-3">
-			<label for="descricao" class="form-label">Descrição:</label>
+			<label for="descricao" class="form-label mb-0">Descrição:</label>
 			<textarea id="descricao" class="form-control"></textarea>
 		</div>
 		</div>
-		
+
+		<div class="row">
+		<div class="col-6 mb-3">
+			<label for="email" class="form-label mb-0">E-mail:</label>
+			<input type="email" id="email" class="form-control">
+		</div>
+
+		<div class="col-6 mb-3">
+			<label for="telefone" class="form-label mb-0">E-mail:</label>
+			<input type="telefone" id="telefone" class="form-control">
+		</div>
+		</div>
+
+		<!-- Grupo: Endereço -->
+		<fieldset class="border p-2 mb-3">
+			<legend class="w-auto px-0">Endereço</legend>
+	
+			<div class="row">
+				<div class="col-md-3 mb-3">
+					<label for="txtCep" class="form-label">CEP:</label>
+					<input type="text" name="txtCep" id="cep" class="form-control">
+				</div>
+	
+				<div class="col-md-6 mb-3">
+					<label for="txtEndereco" class="form-label">Endereço:</label>
+					<input type="text" name="txtEndereco" id="endereco" class="form-control">
+				</div>
+	
+				<div class="col-md-3 mb-3">
+					<label for="txtNumero" class="form-label">Número:</label>
+					<input type="text" name="txtNumero" id="numero" class="form-control">
+				</div>
+			</div>
+	
+			<div class="row">
+				<div class="col-md-3 mb-3">
+					<label for="txtBairro" class="form-label">Bairro:</label>
+					<input type="text" name="txtBairro" id="bairro" class="form-control">
+				</div>
+	
+				<div class="col-md-6 mb-3">
+					<label for="txtCidade" class="form-label">Cidade:</label>
+					<input type="text" name="txtCidade" id="cidade" class="form-control">
+				</div>
+	
+				<div class="col-md-3 mb-3">
+					<label for="txtUf" class="form-label">UF:</label>
+					<select name="txtUf" id="uf" class="form-select">
+						<option value=""  selected>UF...</option>
+						<option value="AC" >Acre</option>
+						<option value="AL" >Alagoas</option>
+						<option value="AP" >Amap&aacute;</option>
+						<option value="AM" >Amazonas</option>
+						<option value="BA" >Bahia</option>
+						<option value="CE" >Cear&aacute;</option>
+						<option value="DF" >Distrito Federal</option>
+						<option value="ES" >Esp&iacute;rito Santo</option>
+						<option value="GO" >Goi&aacute;s</option>
+						<option value="MA" >Maranh&atilde;o</option>
+						<option value="MT" >Mato Grosso</option>
+						<option value="MS" >Mato Grosso do Sul</option>
+						<option value="MG" >Minas Gerais</option>
+						<option value="PA" >Par&aacute;</option>
+						<option value="PB" >Para&iacute;ba</option>
+						<option value="PR" >Paran&aacute;</option>
+						<option value="PE" >Pernambuco</option>
+						<option value="PI" >Piau&iacute;</option>
+						<option value="RJ" >Rio de Janeiro</option>
+						<option value="RN" >Rio Grande do Norte</option>
+						<option value="RS" >Rio Grande do Sul</option>
+						<option value="RO" >Rond&ocirc;nia</option>
+						<option value="RR" >Roraima</option>
+						<option value="SC" >Santa Catarina</option>
+						<option value="SP" >S&atilde;o Paulo</option>
+						<option value="SE" >Sergipe</option>
+						<option value="TO" >Tocantins</option>
+					</select>
+				</div>
+	
+			</div>
+		</fieldset>
+
 		<input type="hidden" id="id_prefeitura" value="1" />
 		<button  type="submit" class="btn btn-success">Salvar</button>
 		<a href="secretarias.html" class="btn btn-secondary">Cancelar</a>
@@ -40,18 +123,30 @@
 	</div>
 
 <script src="js/api.js"></script>
+
 <script>
 	document.getElementById("form-create").addEventListener("submit", async (e) => {
-		e.preventDefault();
-		const data = {
+	e.preventDefault();
+
+	const data = {
 		secretaria: secretaria.value,
 		sigla: sigla.value,
 		descricao: descricao.value,
 		id_prefeitura: parseInt(id_prefeitura.value),
-		};
-		await criarSecretaria(data);
-		window.location.href = "secretarias.html";
-	});
+		cep: cep.value,
+		endereco: endereco.value,
+		numero: numero.value,
+		bairro: bairro.value,
+		cidade: cidade.value,
+		uf: uf.value,
+		email: email.value,
+		telefone: telefone.value
+	};
+
+	await criarSecretaria(data);
+	window.location.href = "secretarias.html";
+});
+
 </script>
 </body>
 </html>
