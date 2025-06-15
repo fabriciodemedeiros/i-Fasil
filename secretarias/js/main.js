@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${p.secretaria}</td>
-          <td>${p.descricao || "-"}</td>
-          <td>${p.id_prefeitura}</td>
+          <td>${p.sigla || "-"}</td>
+          <td>${p.descricao}</td>
           <td>
             <a href="edit?id=${p.id}" class="btn btn-sm btn-warning">Editar</a>
             <button class="btn btn-sm btn-danger" onclick="handleDelete(${p.id})">Excluir</button>
