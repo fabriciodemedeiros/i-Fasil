@@ -159,11 +159,10 @@
 	e.preventDefault();
 
 	const data = {
-		id_secretaria: parseInt(id_secretaria.value),
-		id_prefeitura: parseInt(id_prefeitura.value),
-		departamento: departamento.value,
-		sigla: sigla.value,
-		descricao: descricao.value,
+		servidor: servidor.value,
+		genero: genero.value,
+		cpf: cpf.value,
+		data_nascimento: nascimento.value,
 		email: email.value,
 		telefone: telefone.value || null,
 		endereco: endereco.value || null,
@@ -174,7 +173,7 @@
 		cep: cep.value || null
 	};
 
-	await criarServidor(data);
+	await novoServidor(data);
 	window.location.href = "index.html";
 });
 </script>
