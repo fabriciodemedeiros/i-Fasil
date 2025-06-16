@@ -1,148 +1,212 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <title>Editar Departamento</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+	<meta charset="UTF-8" />
+	<title>+Novo Servidor</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<script src="https://fasil.criarsite.online/dist/js/cep.js"></script>
+	<style>
+		body {
+			background-color: #f4f6f9;
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		}
+		.navbar {
+			background-color: #003366;
+		}
+		.navbar-brand, .nav-link {
+			color: #fff !important;
+		}
+		.card {
+			border: none;
+			border-radius: 8px;
+			box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+		}
+		.form-label {
+			margin-bottom: 0;
+			font-weight: 600;
+			color: #555;
+		}
+	
+		.section-title {
+			border-bottom: 2px solid #003366;
+			padding-bottom: 0.3rem;
+			margin-bottom: 1rem;
+			font-size: 1.2rem;
+			color: #003366;
+		}
+	</style>
 </head>
 <body>
-	<div class="container mt-3">
+	<div class="container mt-5">
 	
-	<div class="card shadow rounded-4">
-		<div class="card-header bg-warning text-dark rounded-top-4">
-			<h4 class="mb-0">Editar Departamento</h4>
-		</div>
+	<h2 class="section-title">+Novo Servidor</h2>
 
-		<form action="/api/servidores/update.php?id=<?= $servidor['id_servidor'] ?>" method="POST" class="container mt-5">
-			<h2 class="mb-4">Editar Servidor</h2>
-			<div class="mb-3">
-			  <label class="form-label">Nome Completo</label>
-			  <input type="text" class="form-control" name="servidor" value="<?= htmlspecialchars($servidor['servidor']) ?>" required>
-			</div>
+	<form id="form-create" class="card p-4 mb-5">
+
+		<fieldset class="border p-2 mb-2">
+			
+			<legend class="float-none w-auto mb-0 px-2 fw-bold" style="color: #003366;">Servidor</legend>
+			
 			<div class="row">
-			  <div class="col-md-6 mb-3">
-				<label class="form-label">CPF</label>
-				<input type="text" class="form-control" name="cpf" value="<?= $servidor['cpf'] ?>" required>
-			  </div>
-			  <div class="col-md-6 mb-3">
-				<label class="form-label">Matrícula</label>
-				<input type="text" class="form-control" name="matricula" value="<?= $servidor['matricula'] ?>" required>
-			  </div>
+				
+				<div class="col-8 mb-3">
+					<label for="servidor" class="form-label">Nome:</label>
+					<input type="text" id="servidor" class="form-control" required />
+				</div>
+				
+				<div class="col-4 mb-3">
+					<label for="genero" class="form-label">Gênero:</label>
+					<select id="genero" class="form-select" required>
+						<option value="">Gênero...</option>
+						<option value="F">Feminino</option>
+						<option value="M">Masculino</option>
+					</select>
+				</div>
+
 			</div>
+			
 			<div class="row">
-			  <div class="col-md-6 mb-3">
-				<label class="form-label">Data de Nascimento</label>
-				<input type="date" class="form-control" name="data_nascimento" value="<?= $servidor['data_nascimento'] ?>">
-			  </div>
-			  <div class="col-md-6 mb-3">
-				<label class="form-label">Data de Admissão</label>
-				<input type="date" class="form-control" name="data_admissao" value="<?= $servidor['data_admissao'] ?>">
-			  </div>
+
+				<div class="col-md-6 mb-3">
+					<label for="cpf" class="form-label">CPF:</label>
+					<input type="text" id="cpf" class="form-control" maxlength="14" required />
+				</div>
+				
+				<div class="col-md-6 mb-3">
+					<label for="nascimento" class="form-label">Nascimento:</label>
+					<input type="date" id="nascimento" class="form-control" required />
+				</div>
+
 			</div>
-			<div class="mb-3">
-			  <label class="form-label">E-mail</label>
-			  <input type="email" class="form-control" name="email" value="<?= $servidor['email'] ?>">
+
+		</fieldset>
+
+		<fieldset class="border p-2 mb-2">
+
+			<legend class="float-none w-auto px-2 fw-bold" style="color: #003366;">Contato</legend>
+			
+			<div class="row g-2">
+				
+				<div class="col-md-6 mb-3">
+					<label for="email" class="form-label">E-mail:</label>
+					<input type="email" id="email" class="form-control" required />
+				</div>
+				
+				<div class="col-md-6 mb-3">
+					<label for="telefone" class="form-label">Telefone:</label>
+					<input type="text" id="telefone" class="form-control" />
+				</div>
 			</div>
-			<div class="mb-3">
-			  <label class="form-label">Telefone</label>
-			  <input type="text" class="form-control" name="telefone" value="<?= $servidor['telefone'] ?>">
+		
+		</fieldset>
+
+		<fieldset class="border p-2 mb-2">
+
+			<legend class="float-none w-auto px-2 fw-bold" style="color: #003366;">Endereço</legend>
+
+			<div class="row mb-3">
+
+				<div class="col-md-3">
+					<label for="cep" class="form-label">CEP:</label>
+					<input type="text" id="cep" class="form-control" maxlength="8" required />
+				</div>
+
+				<div class="col-md-6">
+					<label for="endereco" class="form-label">Endereço:</label>
+					<input type="text" id="endereco" class="form-control" required />
+				</div>
+				
+				<div class="col-md-3">
+					<label for="numero" class="form-label">Número:</label>
+					<input type="text" id="numero" class="form-control" required />
+				</div>
+
 			</div>
-			<fieldset class="border p-3 mb-3">
-			  <legend class="float-none w-auto px-2">Endereço</legend>
-			  <div class="row mb-3">
-				<div class="col-md-8">
-				  <label class="form-label">Logradouro</label>
-				  <input type="text" class="form-control" name="endereco" value="<?= $servidor['endereco'] ?>">
+
+			<div class="row mb-3">
+
+				<div class="col-md-3">
+					<label for="bairro" class="form-label">Bairro:</label>
+					<input type="text" id="bairro" class="form-control" required />
 				</div>
-				<div class="col-md-4">
-				  <label class="form-label">Número</label>
-				  <input type="text" class="form-control" name="numero" value="<?= $servidor['numero'] ?>">
+				
+				<div class="col-md-6">
+					<label for="cidade" class="form-label">Cidade:</label>
+					<input type="text" id="cidade" class="form-control" required />
 				</div>
-			  </div>
-			  <div class="row mb-3">
-				<div class="col-md-4">
-				  <label class="form-label">Bairro</label>
-				  <input type="text" class="form-control" name="bairro" value="<?= $servidor['bairro'] ?>">
+				
+				<div class="col-md-3">
+					<label for="uf" class="form-label">UF:</label>
+					<input type="text" id="uf" class="form-control" maxlength="2" required />
 				</div>
-				<div class="col-md-4">
-				  <label class="form-label">Cidade</label>
-				  <input type="text" class="form-control" name="cidade" value="<?= $servidor['cidade'] ?>">
-				</div>
-				<div class="col-md-2">
-				  <label class="form-label">UF</label>
-				  <input type="text" class="form-control" name="uf" maxlength="2" value="<?= $servidor['uf'] ?>">
-				</div>
-				<div class="col-md-2">
-				  <label class="form-label">CEP</label>
-				  <input type="text" class="form-control" name="cep" maxlength="8" value="<?= $servidor['cep'] ?>">
-				</div>
-			  </div>
-			</fieldset>
-			<div class="mb-3">
-			  <label class="form-label">IP de Cadastro</label>
-			  <input type="text" class="form-control" name="ip_at" value="<?= $servidor['ip_at'] ?>" required>
+				
+				
 			</div>
-			<button type="submit" class="btn btn-success">Salvar Alterações</button>
-		  </form>
-		  
+
+		</fieldset>
+		
+		<button type="submit" class="btn btn-primary mb-2">+Novo Servidor</button>
+		<button type="reset" class="btn btn-secondary px-4">Limpar</button>
+
+	</form>
+
 	</div>
-  </div>
 
-  <script src="js/api.js"></script>
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
+<script src="js/api.js"></script>
+<script>
+	const params = new URLSearchParams(window.location.search);
+	const id = params.get("id");
 
-    fetchDepartamentos().then(departamentos => {
-      const departamento = departamentos.find(d => d.id == id);
-      if (departamento) {
-        document.getElementById("id").value = departamento.id;
-        document.getElementById("id_secretaria").value = departamento.id_secretaria;
-        document.getElementById("id_prefeitura").value = departamento.id_prefeitura;
-        document.getElementById("departamento").value = departamento.departamento;
-        document.getElementById("sigla").value = departamento.sigla;
-        document.getElementById("descricao").value = departamento.descricao;
-        document.getElementById("email").value = departamento.email;
-        document.getElementById("telefone").value = departamento.telefone;
-        document.getElementById("endereco").value = departamento.endereco;
-        document.getElementById("numero").value = departamento.numero;
-        document.getElementById("bairro").value = departamento.bairro;
-        document.getElementById("cidade").value = departamento.cidade;
-        document.getElementById("uf").value = departamento.uf;
-        document.getElementById("cep").value = departamento.cep;
-		document.getElementById("ip_at").textContent = departamento.ip_at;
-      } else {
-        alert("Departamento não encontrado.");
-      }
-    });
+	fetchServidores().then(servidores => {
+		const departamento = servidores.find(d => d.id == id);
+		if (departamento) {
+			document.getElementById("id").value = departamento.id;
+			document.getElementById("departamento").value = departamento.servidor;
+			document.getElementById("sigla").value = departamento.sigla;
+			document.getElementById("descricao").value = departamento.descricao;
+			document.getElementById("email").value = departamento.email;
+			document.getElementById("telefone").value = departamento.telefone;
+			document.getElementById("endereco").value = departamento.endereco;
+			document.getElementById("numero").value = departamento.numero;
+			document.getElementById("bairro").value = departamento.bairro;
+			document.getElementById("cidade").value = departamento.cidade;
+			document.getElementById("uf").value = departamento.uf;
+			document.getElementById("cep").value = departamento.cep;
+			document.getElementById("ip_at").textContent = departamento.ip_at;
+		} else {
+			alert("Servidor não encontrado.");
+		}
+	});
+	
+	document.getElementById("form-edit").addEventListener("submit", async (e) => {
+		e.preventDefault();
+		const data = {
+			id: parseInt(document.getElementById("id").value),
+			id_secretaria: parseInt(document.getElementById("id_secretaria").value),
+			id_prefeitura: parseInt(document.getElementById("id_prefeitura").value),
+			departamento: document.getElementById("departamento").value.trim(),
+			sigla: document.getElementById("sigla").value.trim(),
+			descricao: document.getElementById("descricao").value.trim(),
+			email: document.getElementById("email").value.trim(),
+			telefone: document.getElementById("telefone").value.trim(),
+			endereco: document.getElementById("endereco").value.trim(),
+			numero: document.getElementById("numero").value.trim(),
+			bairro: document.getElementById("bairro").value.trim(),
+			cidade: document.getElementById("cidade").value.trim(),
+			uf: document.getElementById("uf").value,
+			cep: document.getElementById("cep").value.trim(),
+		};
+		
+		const sucesso = await atualizarServidor(data);
+		if (sucesso) {
+			alert("Servidor atualizado com sucesso!");
+			window.location.href = "index.html";
+		} else {
+			alert("Erro ao atualizar o Servidor.");
+		}
+	});
+</script>
 
-    document.getElementById("form-edit").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const data = {
-        id: parseInt(document.getElementById("id").value),
-        id_secretaria: parseInt(document.getElementById("id_secretaria").value),
-        id_prefeitura: parseInt(document.getElementById("id_prefeitura").value),
-        departamento: document.getElementById("departamento").value.trim(),
-        sigla: document.getElementById("sigla").value.trim(),
-        descricao: document.getElementById("descricao").value.trim(),
-        email: document.getElementById("email").value.trim(),
-        telefone: document.getElementById("telefone").value.trim(),
-        endereco: document.getElementById("endereco").value.trim(),
-        numero: document.getElementById("numero").value.trim(),
-        bairro: document.getElementById("bairro").value.trim(),
-        cidade: document.getElementById("cidade").value.trim(),
-        uf: document.getElementById("uf").value,
-        cep: document.getElementById("cep").value.trim(),
-      };
-
-      const sucesso = await atualizarDepartamento(data);
-      if (sucesso) {
-        alert("Departamento atualizado com sucesso!");
-        window.location.href = "departamentos.html";
-      } else {
-        alert("Erro ao atualizar o departamento.");
-      }
-    });
-  </script>
 </body>
 </html>
