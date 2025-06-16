@@ -162,9 +162,7 @@
 		const departamento = servidores.find(d => d.id == id);
 		if (departamento) {
 			document.getElementById("id").value = departamento.id;
-			document.getElementById("departamento").value = departamento.servidor;
-			document.getElementById("sigla").value = departamento.sigla;
-			document.getElementById("descricao").value = departamento.descricao;
+			document.getElementById("servidor").value = departamento.servidor;
 			document.getElementById("email").value = departamento.email;
 			document.getElementById("telefone").value = departamento.telefone;
 			document.getElementById("endereco").value = departamento.endereco;
@@ -173,7 +171,6 @@
 			document.getElementById("cidade").value = departamento.cidade;
 			document.getElementById("uf").value = departamento.uf;
 			document.getElementById("cep").value = departamento.cep;
-			document.getElementById("ip_at").textContent = departamento.ip_at;
 		} else {
 			alert("Servidor não encontrado.");
 		}
@@ -183,11 +180,7 @@
 		e.preventDefault();
 		const data = {
 			id: parseInt(document.getElementById("id").value),
-			id_secretaria: parseInt(document.getElementById("id_secretaria").value),
-			id_prefeitura: parseInt(document.getElementById("id_prefeitura").value),
-			departamento: document.getElementById("departamento").value.trim(),
-			sigla: document.getElementById("sigla").value.trim(),
-			descricao: document.getElementById("descricao").value.trim(),
+			departamento: document.getElementById("servidor").value.trim(),
 			email: document.getElementById("email").value.trim(),
 			telefone: document.getElementById("telefone").value.trim(),
 			endereco: document.getElementById("endereco").value.trim(),
