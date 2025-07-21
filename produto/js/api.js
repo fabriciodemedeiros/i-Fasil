@@ -1,4 +1,4 @@
-const API_URL = "https://www.fasil.criarsite.online/api"; // Troque pelo seu endpoint
+const API_URL = "https://www.fasil.criarsite.online/api/produto"; // Troque pelo seu endpoint
 
 async function fetchProdutos() {
   const res = await fetch(`${API_URL}/read.php`);
