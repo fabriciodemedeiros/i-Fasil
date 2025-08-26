@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>i-Escola - Painel Secretaria</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    /* MESMO CSS do seu dashboard anterior */
+    body, html { height: 100%; margin: 0; font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #ece9e6, #ffffff); color: #333; }
+    .wrapper { display: flex; min-height: 100vh; }
+    nav.sidebar { width: 250px; background: #6c63ff; color: white; padding: 2rem 1.5rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 4px 0 15px rgba(0,0,0,0.1); position: fixed; top:0; bottom:0; left:0; z-index: 999; }
+    nav.sidebar h2 { font-weight:700; letter-spacing:2px; margin-bottom:2rem; font-size:1.6rem; user-select:none; }
+    nav.sidebar a.nav-link { color:white; font-weight:600; padding:0.75rem 1rem; border-radius:10px; margin-bottom:0.75rem; display:flex; align-items:center; gap:0.8rem; text-decoration:none; transition:background-color 0.3s ease; user-select:none; }
+    nav.sidebar a.nav-link:hover, nav.sidebar a.nav-link.active { background-color:#574fd6; color:#fff; text-decoration:none; }
+    main.content { margin-left:250px; flex-grow:1; padding:2.5rem 3rem; }
+    header.page-header { margin-bottom:2.5rem; display:flex; justify-content:space-between; align-items:center; user-select:none; }
+    header.page-header h1 { font-weight:700; font-size:2rem; color:#4a4a8a; letter-spacing:1.2px; }
+    header.page-header .user-info { font-weight:600; color:#6c63ff; font-size:1rem; }
+    .dashboard-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:2rem; }
+    .card-action { background:white; border-radius:15px; box-shadow:0 8px 25px rgba(0,0,0,0.1); padding:2rem; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; transition: box-shadow 0.3s ease, transform 0.2s ease; cursor:pointer; user-select:none; color:#4a4a8a; text-decoration:none; }
+    .card-action:hover { box-shadow:0 12px 40px rgba(0,0,0,0.15); transform:translateY(-6px); color:#6c63ff; }
+    .card-action i { font-size:3.5rem; margin-bottom:1rem; color:#6c63ff; transition:color 0.3s ease; }
+    .card-action:hover i { color:#574fd6; }
+    .card-action span { font-size:1.2rem; font-weight:600; letter-spacing:0.8px; }
+    @media (max-width:768px){ nav.sidebar{position:relative;width:100%;height:auto;flex-direction:row;padding:1rem 1rem;overflow-x:auto;} nav.sidebar h2{font-size:1.3rem;margin-bottom:0;margin-right:2rem;white-space:nowrap;} nav.sidebar a.nav-link{margin-bottom:0;margin-right:1rem;white-space:nowrap;font-size:0.9rem;padding:0.5rem 1rem;} main.content{margin-left:0;padding:1.5rem;} }
+  </style>
+</head>
+<body>
+<script>
+  // Verifica se usuário está logado pelo localStorage
+  const userId = localStorage.getItem("user_id");
+  if (!userId) {
+    window.location.href = "login.html";
+  }
+</script>
+
+<div class="wrapper">
+  <nav class="sidebar" aria-label="Menu Principal">
+    <h2>i-Escola</h2>
+    <a href="#" class="nav-link active"><i class="bi bi-columns-gap"></i> Dashboard</a>
+    <a href="escola/matricula/novaMatricula.html" class="nav-link"><i class="bi bi-people-fill"></i> +Nova matrícula</a>
+    <a href="#" class="nav-link"><i class="bi bi-people-fill"></i> Turmas</a>
+    <a href="#" class="nav-link"><i class="bi bi-journal-text"></i> Disciplinas</a>
+    <a href="#" class="nav-link"><i class="bi bi-person-badge-fill"></i> Professores</a>
+    <a href="#" class="nav-link"><i class="bi bi-person-check-fill"></i> Alunos</a>
+    <a href="#" class="nav-link"><i class="bi bi-bar-chart-fill"></i> Relatórios</a>
+    <a href="#" class="nav-link"><i class="bi bi-gear-fill"></i> Configurações</a>
+    <div class="mt-auto pt-3" style="font-size:0.9rem; opacity:0.7; user-select:none;">&copy; 2025 Medeiros Corporation</div>
+  </nav>
+
+  <main class="content">
+    <header class="page-header">
+      <h1>Painel da Secretaria</h1>
+      <div class="user-info">Olá, <strong></strong></div>
+    </header>
+
+    <section class="dashboard-grid" aria-label="Atalhos principais">
+      <a href="escola/turma/turmas" class="card-action"><i class="bi bi-people-fill"></i><span>Gerenciar Turmas</span></a>
+      <a href="#" class="card-action"><i class="bi bi-journal-text"></i><span>Gerenciar Disciplinas</span></a>
+      <a href="#" class="card-action"><i class="bi bi-person-badge-fill"></i><span>Gerenciar Professores</span></a>
+      <a href="#" class="card-action"><i class="bi bi-person-check-fill"></i><span>Gerenciar Alunos</span></a>
+      <a href="#" class="card-action"><i class="bi bi-bar-chart-fill"></i><span>Relatórios</span></a>
+      <a href="#" class="card-action"><i class="bi bi-gear-fill"></i><span>Configurações</span></a>
+    </section>
+  </main>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const userName = localStorage.getItem("user_escola") || "Secretaria";
+    const userInfo = document.querySelector(".user-info strong");
+    if (userInfo) userInfo.textContent = userName;
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

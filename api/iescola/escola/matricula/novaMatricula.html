@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>i‑Escola • Nova Matrícula</title>
+
+  <!-- Bootstrap (apenas CSS; JS opcional no final) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --brand: #0f52ba;
+    }
+    body { background: #f7f8fa; }
+    .brand { color: var(--brand); }
+    .card-hover { transition: transform .08s ease, box-shadow .08s ease; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.06); }
+    .pointer { cursor: pointer; }
+    .step { display: none; }
+    .step.active { display: block; }
+    .skeleton { position: relative; overflow: hidden; background: #e9ecef; border-radius: .4rem; }
+    .skeleton::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent); animation: shimmer 1.2s infinite; }
+    @keyframes shimmer { 100% { transform: translateX(100%); } }
+    .toast-container { z-index: 1080; }
+  </style>
+</head>
+<body>
+  <!-- Topbar -->
+  <nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-semibold brand" href="#">i‑Escola</a>
+      <div class="ms-auto d-flex gap-2">
+        <button id="btn-logout" class="btn btn-outline-secondary btn-sm">Sair</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-4">
+    <div class="row g-4">
+      <div class="col-12 col-lg-10 mx-auto">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <h3 class="m-0">+ Nova Matrícula</h3>
+          <span class="text-secondary small">Fluxo: Turmas → Detalhes → Envio</span>
+        </div>
+
+        <!-- STEP 1: Lista de turmas (equivale ao bloco PHP quando $rsTurma está vazio) -->
+        <section id="step-turmas" class="step active">
+          <div class="card card-hover">
+            <div class="card-body">
+              <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+                <h5 class="m-0"><i class="bi bi-collection"></i> Turmas</h5>
+                <span id="turmas-count" class="badge text-bg-secondary">—</span>
+                <div class="ms-auto d-flex gap-2">
+                  <input id="filtroTurmas" type="search" class="form-control form-control-sm" placeholder="Filtrar por nome/nível/turno…" />
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="apenasComVagas">
+                    <label class="form-check-label small" for="apenasComVagas">Apenas com vagas</label>
+                  </div>
+                </div>
+              </div>
+
+              <div id="turmas-list" class="list-group">
+                <!-- Populado via JS -->
+              </div>
+
+              <!-- Skeleton inicial -->
+              <div id="turmas-skeleton" class="mt-2">
+                <div class="skeleton p-3 mb-2"></div>
+                <div class="skeleton p-3 mb-2"></div>
+                <div class="skeleton p-3 mb-2"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 2: Formulário de matrícula (equivale ao bloco PHP quando existe $rsTurma) -->
+        <section id="step-form" class="step">
+          <div class="card card-hover">
+            <div class="card-body">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                  <div class="small text-secondary">Escola</div>
+                  <div class="fw-semibold" id="escola-nome">—</div>
+                </div>
+                <button id="btn-voltar-turmas" class="btn btn-outline-secondary btn-sm">← Voltar às turmas</button>
+              </div>
+
+              <div class="row g-3 mb-3">
+                <div class="col-12 col-md-6">
+                  <div class="small text-secondary">Turma</div>
+                  <div class="fw-semibold" id="turma-nome">—</div>
+                </div>
+                <div class="col-12 col-md-6">
+                  <div class="small text-secondary">Nível • Turno • Ano letivo</div>
+                  <div class="fw-semibold" id="turma-meta">—</div>
+                </div>
+              </div>
+
+              <form id="form-matricula" novalidate>
+                <div class="row g-3">
+                  <div class="col-12 col-md-8">
+                    <label for="aluno" class="form-label">Aluno</label>
+                    <input type="text" id="aluno" name="aluno" class="form-control" maxlength="50" required />
+                    <div class="invalid-feedback">Informe o nome do aluno.</div>
+                  </div>
+
+                  <div class="col-12 col-md-4">
+                    <label for="genero" class="form-label">Gênero</label>
+                    <select id="genero" name="genero" class="form-select" required>
+                      <option value="">Selecione…</option>
+                      <option value="F">Feminino</option>
+                      <option value="M">Masculino</option>
+                      <option value="N">Prefiro não informar</option>
+                    </select>
+                    <div class="invalid-feedback">Selecione o gênero.</div>
+                  </div>
+
+                  <div class="col-12 col-md-8">
+                    <label for="cpf" class="form-label">CPF</label>
+                    <input type="text" id="cpf" name="cpf" class="form-control" inputmode="numeric" placeholder="000.000.000-00" required />
+                    <div class="invalid-feedback">CPF inválido.</div>
+                  </div>
+
+                  <div class="col-12 col-md-4">
+                    <label for="nascimento" class="form-label">Nascimento</label>
+                    <input type="date" id="nascimento" name="nascimento" class="form-control" required />
+                    <div class="invalid-feedback">Informe a data de nascimento.</div>
+                  </div>
+                </div>
+
+                <hr class="my-4" />
+
+                <div class="mb-2">
+                  <div class="small text-secondary">Disciplinas & Professores (informativo)</div>
+                </div>
+                <div id="disciplinas-list" class="row g-2">
+                  <!-- Renderizado via JS; enviado como payload -->
+                </div>
+
+                <div class="d-none">
+                  <!-- Campos ocultos mapeando o legacy -->
+                  <input type="hidden" id="id_turma" />
+                  <input type="hidden" id="id_nivel" />
+                  <input type="hidden" id="id_turno" />
+                  <input type="hidden" id="grau" />
+                  <input type="hidden" id="anoletivo" />
+                </div>
+
+                <div class="d-grid mt-4">
+                  <button type="submit" class="btn btn-primary">+ Cadastrar Matrícula</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toasts -->
+  <div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="toast" class="toast align-items-center text-white bg-dark border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div id="toast-body" class="toast-body">Mensagem</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS (para Toast) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // ======================
+    // CONFIG & API CLIENT
+    // ======================
+    const API = {
+      baseUrl: "http://192.168.18.27/Project/public/api/v1", // <-- AJUSTE AQUI
+      endpoints: {
+        turmas: "/turmas",                          // GET lista
+        turmaById: (id) => `/turmas/${id}`,          // GET detalhes
+        matriculas: "/matriculas"                   // POST criar
+      }
+    };
+
+    const token = localStorage.getItem("jwt") || localStorage.getItem("jwt_token") || localStorage.getItem("token");
+
+    async function apiFetch(path, options = {}) {
+      const headers = new Headers(options.headers || {});
+      headers.set("Accept", "application/json");
+      if (!(options.body instanceof FormData)) headers.set("Content-Type", "application/json");
+      if (token) headers.set("Authorization", `Bearer ${token}`);
+
+      const res = await fetch(API.baseUrl + path, { ...options, headers });
+      if (res.status === 401) {
+        showToast("Sessão expirada. Faça login novamente.", "warning");
+        setTimeout(() => window.location.href = "http://192.168.18.27/Project/public/api/iescola/login", 1200);
+        throw new Error("Unauthorized");
+      }
+      let data = null;
+      try { data = await res.json(); } catch { /* corpo vazio */ }
+      if (!res.ok) {
+        const msg = data?.message || data?.error || `Erro ${res.status}`;
+        throw new Error(msg);
+      }
+      return data;
+    }
+
+    // ======================
+    // UTILITÁRIOS
+    // ======================
+    const byId = (id) => document.getElementById(id);
+
+    function showStep(id) {
+      document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+      byId(id).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showToast(message, variant = "dark") {
+      const toastEl = byId('toast');
+      const bodyEl = byId('toast-body');
+      toastEl.className = `toast align-items-center text-white bg-${variant} border-0`;
+      bodyEl.textContent = message;
+      const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+      toast.show();
+    }
+
+    // CPF helpers (sanitiza, mascara, valida)
+    function onlyDigits(v) { return (v || '').replace(/\D/g, ''); }
+    function maskCPF(v) {
+      const d = onlyDigits(v).slice(0, 11);
+      const p1 = d.slice(0,3), p2 = d.slice(3,6), p3 = d.slice(6,9), p4 = d.slice(9,11);
+      let out = p1; if (p2) out += '.' + p2; if (p3) out += '.' + p3; if (p4) out += '-' + p4; return out;
+    }
+    function isValidCPF(cpf) {
+      const s = onlyDigits(cpf);
+      if (!s || s.length !== 11) return false;
+      if (/^(\d)\1{10}$/.test(s)) return false; // evita repetidos
+      let soma = 0;
+      for (let i=0; i<9; i++) soma += parseInt(s[i]) * (10 - i);
+      let d1 = 11 - (soma % 11); d1 = d1 >= 10 ? 0 : d1;
+      soma = 0;
+      for (let i=0; i<9; i++) soma += parseInt(s[i]) * (11 - i);
+      soma += d1 * 2;
+      let d2 = 11 - (soma % 11); d2 = d2 >= 10 ? 0 : d2;
+      return s[9] == d1 && s[10] == d2;
+    }
+
+    // Base64 para compatibilidade de URLs (equivalente ao $objFc->base64)
+    const b64 = {
+      enc: (str) => btoa(unescape(encodeURIComponent(String(str)))),
+      dec: (str) => decodeURIComponent(escape(atob(String(str))))
+    };
+
+    // ======================
+    // ESTADO/STORE SIMPLES
+    // ======================
+    const Store = {
+      turmas: [],
+      turmaSelecionada: null,     // detalhes
+      disciplinas: []             // do detalhe da turma
+    };
+
+    // ======================
+    // RENDER: LISTA DE TURMAS
+    // ======================
+    async function carregarTurmas() {
+      const list = byId('turmas-list');
+      const skeleton = byId('turmas-skeleton');
+      skeleton.style.display = 'block';
+      list.innerHTML = '';
+      try {
+        const data = await apiFetch(API.endpoints.turmas, { method: 'GET' });
+        Store.turmas = Array.isArray(data) ? data : (data?.items || []);
+        byId('turmas-count').textContent = `${Store.turmas.length} ativas`;
+        renderTurmas();
+      } catch (e) {
+        showToast(e.message || 'Falha ao carregar turmas', 'danger');
+      } finally {
+        skeleton.style.display = 'none';
+      }
+    }
+
+    function renderTurmas() {
+      const list = byId('turmas-list');
+      const filtro = byId('filtroTurmas').value.toLowerCase();
+      const apenasVagas = byId('apenasComVagas').checked;
+
+      list.innerHTML = '';
+      const turmasFiltradas = Store.turmas.filter(t => {
+        const texto = `${t.turma || t.nome || ''} ${t.nivel || ''} ${t.turno || ''}`.toLowerCase();
+        const vagasDisp = (Number(t.vagas) || 0) - (Number(t.total_alunos) || Number(t.totalAlunos) || 0);
+        const passaVaga = !apenasVagas || vagasDisp > 0;
+        return texto.includes(filtro) && passaVaga;
+      });
+
+      if (!turmasFiltradas.length) {
+        list.innerHTML = `<div class="list-group-item">Nenhuma turma encontrada.</div>`;
+        return;
+      }
+
+      turmasFiltradas.forEach(t => {
+        const total = Number(t.total_alunos ?? t.totalAlunos ?? 0);
+        const vagas = Number(t.vagas ?? 0);
+        const disp = vagas - total;
+        const pillCls = disp > 0 ? 'text-bg-success' : 'text-bg-danger';
+        const id = t.id ?? t.id_turma;
+
+        const a = document.createElement('a');
+        a.href = `?rec=${id}`;
+        a.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center';
+        a.innerHTML = `
+          <div style="color: var(--brand)">
+            <strong class="d-block"><i class="bi bi-share"></i> ${t.turma || '—'}
+              <span class="badge text-bg-primary rounded-pill">${total}</span>
+            </strong>
+            <small>${t.nivel || '—'} • ${t.turno || '—'}</small>
+          </div>
+          <span class="badge rounded-pill ${pillCls}">${disp}/${vagas} Vagas</span>
+        `;
+        a.addEventListener('click', (ev) => {
+          ev.preventDefault();
+          selecionarTurma(id);
+          const url = new URL(window.location.href);
+          url.searchParams.set('rec', b64.enc(String(id)));
+          window.history.replaceState({}, '', url);
+        });
+        list.appendChild(a);
+      });
+    }
+
+    // ======================
+    // DETALHE DA TURMA + FORM
+    // ======================
+    async function selecionarTurma(id) {
+  try {
+    const res = await apiFetch(API.endpoints.turmaById(id), { method: 'GET' });
+    const det = res.data; // <-- corrigido: pega o objeto correto
+
+    Store.turmaSelecionada = {
+      id_turma: det.id_turma ?? id,
+      escola: det.escola ?? '—',
+      turma: det.turma ?? '—',
+      grau: det.grau ?? null,
+      nivel: det.nivel ?? '—',
+      turno: det.turno ?? '—',
+      anoletivo: det.anoletivo ?? '—',
+      id_nivel: det.id_nivel ?? null,
+      id_turno: det.id_turno ?? null,
+    };
+
+    //Store.disciplinas = []; // Não há disciplinas no retorno atual
+    // 2️⃣ Busca disciplinas da turma
+    const disciplinasRes = await apiFetch(`/turmaDisciplinas?id_turma=${id}`, { method: 'GET' });
+    Store.disciplinas = Array.isArray(disciplinasRes) ? disciplinasRes.map(d => ({
+      id_disciplina: d.id_disciplina,
+      nome: d.disciplina,
+      id_professor: d.id_professor,
+      professor: d.professor,
+      mediaFinal: d.mediaFinal,
+      mediaCorte: d.mediaCorte
+    })) : [];
+
+    // Atualiza UI
+    byId('escola-nome').textContent = Store.turmaSelecionada.escola;
+    byId('turma-nome').textContent = Store.turmaSelecionada.turma;
+    byId('turma-meta').textContent = `${Store.turmaSelecionada.nivel} • ${Store.turmaSelecionada.turno} • ${Store.turmaSelecionada.anoletivo}`;
+
+    byId('id_turma').value = Store.turmaSelecionada.id_turma;
+    byId('id_nivel').value = Store.turmaSelecionada.id_nivel ?? '';
+    byId('id_turno').value = Store.turmaSelecionada.id_turno ?? '';
+    byId('grau').value = Store.turmaSelecionada.grau ?? '';
+    byId('anoletivo').value = Store.turmaSelecionada.anoletivo ?? '';
+
+    renderDisciplinas();
+    showStep('step-form');
+  } catch (e) {
+    showToast(e.message || 'Não foi possível carregar a turma.', 'danger');
+  }
+}
+
+
+    function renderDisciplinas() {
+      const wrap = byId('disciplinas-list');
+      wrap.innerHTML = '';
+      if (!Store.disciplinas.length) {
+        wrap.innerHTML = '<div class="col-12 text-secondary small">Sem disciplinas vinculadas.</div>';
+        return;
+      }
+      Store.disciplinas.forEach(d => {
+        const col = document.createElement('div');
+        col.className = 'col-12 col-md-6';
+        col.innerHTML = `
+          <div class="border rounded p-2 h-100">
+            <div class="fw-semibold">${d.nome}</div>
+            <div class="small"><i class="bi bi-mortarboard"></i> ${d.professor}</div>
+            <div class="small text-secondary">Média Final: ${d.mediaFinal ?? '—'} • Corte: ${d.mediaCorte ?? '—'}</div>
+          </div>`;
+        wrap.appendChild(col);
+      });
+    }
+
+    // ======================
+    // SUBMISSÃO DA MATRÍCULA
+    // ======================
+    byId('form-matricula').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+
+      // Validação HTML5 + CPF
+      const form = ev.currentTarget;
+      const cpfInput = byId('cpf');
+      if (!isValidCPF(cpfInput.value)) {
+        cpfInput.classList.add('is-invalid');
+        showToast('CPF inválido.', 'warning');
+        return;
+      } else {
+        cpfInput.classList.remove('is-invalid');
+      }
+      if (!form.checkValidity()) {
+        form.classList.add('was-validated');
+        return;
+      }
+
+      const payload = {
+        aluno: byId('aluno').value.trim(),
+        genero: byId('genero').value,
+        cpf: onlyDigits(byId('cpf').value),
+        nascimento: byId('nascimento').value, // YYYY-MM-DD
+        id_turma: Store.turmaSelecionada.id_turma,
+        id_nivel: byId('id_nivel').value || null,
+        id_turno: byId('id_turno').value || null,
+        grau: byId('grau').value || null,
+        anoletivo: byId('anoletivo').value || null,
+        disciplinas: Store.disciplinas.map(d => ({
+          id_disciplina: d.id_disciplina,
+          id_professor: d.id_professor,
+          mediaFinal: d.mediaFinal,
+          mediaCorte: d.mediaCorte
+        }))
+      };
+
+      try {
+        const res = await apiFetch(API.endpoints.matriculas, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+
+        // Espera-se que a API trate casos do legacy: CPF existente, status 0/1/2, etc.
+        // Sinalize por códigos/messages padronizadas no backend.
+        if (res?.status_code === 'ALUNO_ATIVO_MESMA_ESCOLA') {
+          showToast('Aluno já ativo nesta escola. Redirecionando ao perfil…', 'info');
+          if (res.perfil_token) setTimeout(() => window.location.href = `../aluno/perfilAluno.html?res=${res.perfil_token}`, 900);
+          return;
+        }
+        if (res?.status_code === 'ALUNO_ATIVO_OUTRA_ESCOLA') {
+          showToast('Este aluno já está matriculado em outra escola.', 'warning');
+          return;
+        }
+        if (res?.status_code === 'TRANSFERENCIA_REALIZADA') {
+          showToast('Matrícula por transferência realizada com sucesso!', 'success');
+          if (res.perfil_token) setTimeout(() => window.location.href = `../aluno/perfilAluno.html?res=${res.perfil_token}`, 900);
+          return;
+        }
+        if (res?.status_code === 'ALUNO_INATIVO') {
+          showToast('Aluno inativo/transferido anteriormente. Contate a secretaria.', 'warning');
+          return;
+        }
+
+        // Sucesso genérico
+        showToast('Matrícula cadastrada com sucesso!', 'success');
+        // Caso a API retorne id_aluno/perfil_token, siga o redirecionamento:
+        if (res?.perfil_token) setTimeout(() => window.location.href = `../aluno/perfilAluno.html?res=${res.perfil_token}`, 900);
+        form.reset();
+        form.classList.remove('was-validated');
+      } catch (e) {
+        showToast(e.message || 'Falha ao cadastrar matrícula', 'danger');
+      }
+    });
+
+    // ======================
+    // EVENTOS E ENTRADA (mask CPF)
+    // ======================
+    byId('cpf').addEventListener('input', (ev) => {
+      ev.target.value = maskCPF(ev.target.value);
+      ev.target.setCustomValidity(isValidCPF(ev.target.value) ? '' : 'CPF inválido');
+    });
+
+    byId('btn-voltar-turmas').addEventListener('click', () => {
+      showStep('step-turmas');
+    });
+
+    byId('btn-logout').addEventListener('click', () => {
+      localStorage.removeItem('jwt');
+      localStorage.removeItem('jwt_token');
+      localStorage.removeItem('token');
+      window.location.href = './login.html';
+    });
+
+    byId('filtroTurmas').addEventListener('input', renderTurmas);
+    byId('apenasComVagas').addEventListener('change', renderTurmas);
+
+    // ======================
+    // BOOTSTRAP: entrada inicial
+    // - Suporta query ?rec=BASE64(id) para abrir direto a turma (compatível com legacy)
+    // ======================
+    (function init() {
+      if (!token) {
+        showToast('Faça login para continuar.', 'warning');
+        setTimeout(() => window.location.href = 'http://192.168.18.27/Project/public/api/iescola/login', 900);
+        return;
+      }
+      carregarTurmas().then(() => {
+        const url = new URL(window.location.href);
+        const rec = url.searchParams.get('rec');
+        if (rec) {
+          try { const id = b64.dec(rec); selecionarTurma(id); } catch { /* ignora */ }
+        }
+      });
+    })();
+  </script>
+
+  <!-- Ícones Bootstrap -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</body>
+</html>
